@@ -1,0 +1,18 @@
+{
+  "name": "tesberry",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:tesberry/tesberry.git",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production node dist/index.js",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.16",
+    "typescript": "4.5.5"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

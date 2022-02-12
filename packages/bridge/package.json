@@ -1,0 +1,15 @@
+{
+  "name": "@tesberry/bridge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:tesberry/tesberry.git",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production node dist/index.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "mqtt": "4.3.5",
+    "socketcan": "3.0.0"
+  }
+}
