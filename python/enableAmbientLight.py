@@ -3,15 +3,14 @@ import cantools
 from pprint import pprint
 
 # Load DBC file
-db = cantools.database.load_file('Model3CAN.dbc')
+db = cantools.database.load_file('db/Model3CAN.dbc')
+vehicle_control = db.get_message_by_name('ID273UI_vehicleControl')
 
 # Connect to CAN bus and 
-bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=500000)
+bus = can.interface.Bus(bustype='socketcan', channel='can0', bitrate=500000)
 
 class VehicleControlListener(can.Listener):
     def on_message_received(self, msg):
-        vehicle_control = db.get_message_by_name('ID273UI_vehicleControl')
-
         # Check if message is vehicleControl
         if msg.arbitration_id == vehicle_control.frame_id:
             # Get all signals and change ambientLightEnabled to 1 if 0

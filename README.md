@@ -8,16 +8,9 @@ https://teslaownersonline.com/threads/diagnostic-port-and-data-access.7502/page-
 
 ## Setup
 
-1. Install bluetooth stack
-   ```bash
-   sudo apt-get install bluetooth bluez-utils blueman
-   ```
-3. Install https://github.com/norly/elmcan
-4. Connect to ELM327 via bluetooth
-5. Configure ELM327 filter to avoid full buffer
-6. (Optional?) Configure ELM327 to use 11-bit CAN IDs `AT PB`
-7. (Optional?) Configure ELM327 protocol to 6
-8. Run script using SocketCAN
+1. Install python-can via setup script
+2. Install all required dependencies
+3. Run script using SocketCAN
 
 
 TODO:
@@ -75,6 +68,15 @@ UI_smartSummonType
 ##### Remotely park your car forward or backward
 UI_selfParkTune
 UI_selfParkRequest -> SELF_PARK_FORWARD, SELF_PARK_REVERSE, PAUSE, RESUME
+
+## Hardware Recommendations
+- Innomaker CAN2USB
+- OBD2 to DB9 cable
+- Raspberry Pi 4
+- Short USB-A to USB-C cable
+
+## TODO
+- shutdown/sleep/wakeup script
 
 ## Development
 For development I would recommend a cable connection using a OBD2 to CAN cable in addition to a CAN to USB device. The reason for this is that we are limiting the CAN IDs to be sent via bluetooth to avoid a full buffer of the OBD2 bluetooth dongle.
