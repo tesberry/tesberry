@@ -4,16 +4,9 @@
 
 ## Setup
 
-1. Install [node.js](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
-  
-3. Install yarn
-  ```bash
-  npm install --global yarn
-  ```
-4. Run app
-  ```bash
-  yarn start
-  ```
+```bash
+./setup.sh
+```
 
 ## TODO
 - check power state of usb port when sentry mode is off
