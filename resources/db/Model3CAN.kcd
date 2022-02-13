@@ -4,7 +4,7 @@
   <Node name="ChassisBus" id="2"/>
   <Node name="VehicleBus" id="3"/>
   <Node name="PartyBus" id="4"/>
-  <Bus name="resources/db/Model3CAN">
+  <Bus name="Model3CAN">
     <Message id="0x00C" name="ID00CUI_status" length="8">
       <Notes></Notes>
       <Producer>
