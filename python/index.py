@@ -51,9 +51,22 @@ def receive_all():
     except KeyboardInterrupt:
         pass
 
-if __name__ == '__main__':
-    receive_all()
+receive_all()
 
+def on_message(client, userdata, msg):
+    if msg.topic.endswith('/SET'):
+        topic = msg.topic.split('/')
+        print(topic, jsonpickle.decode(msg.payload))
+        details = db.get_message_by_name(topic[2])
+        data = details.encode(jsonpickle.decode(msg.payload))
+        can_message = can.Message(arbitration_id=details.frame_id, data=data, is_extended_id=False)
+        try:
+            bus.send(can_message)
+            pprint('Message sent on {}'.format(bus.channel_info))
+        except can.CanError:
+            pprint('Message not sent')
+
+mqttc.on_message = on_message
 
 # def closeConnection:
 #     os.system('sudo ifconfig can0 down')
