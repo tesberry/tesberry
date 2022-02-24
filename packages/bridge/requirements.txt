@@ -2,4 +2,4 @@ paho-mqtt
 asyncio
 can
 cantools
-python-can == 4.0.0rc0
+python-can == 4.0.0
