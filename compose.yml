@@ -6,6 +6,19 @@ services:
     restart: always
     volumes:
       - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    environment:
+      - TZ=Europe/Berlin
     ports:
       - 1883:1883
       - 9001:9001
+  nodered:
+    image: nodered/node-red:latest
+    restart: always
+    network_mode: host
+    volumes:
+      - ./config/nodered:/data
+    environment:
+      - TZ=Europe/Berlin
+    ports:
+      - "1880:1880"
+    user: "1000"
