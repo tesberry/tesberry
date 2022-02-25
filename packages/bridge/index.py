@@ -1,22 +1,38 @@
 #!/usr/bin/env python
 
+import os
 import asyncio
+import atexit
 import can
 import cantools
 import json
 import jsonpickle
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
+from dotenv import load_dotenv
 
-# os.system('sudo ip link set can0 type can bitrate 500000')
-# os.system('sudo ifconfig can0 up')
+load_dotenv()
+notifier = None
+cache = {}
+vehicle_can = os.getenv('VEHICLE_CAN', 'can0')
 
+if vehicle_can.startswith('v'):
+    # Setting up a virtual interface
+    os.system('sudo modprobe vcan')
+    os.system('sudo ip link add {} type vcan bitrate 500000'.format(vehicle_can))
+    os.system('sudo ip link set {} up'.format(vehicle_can))
+else:
+    # Connect to physical interface
+    os.system('sudo ip link set {} type can bitrate 500000'.format(vehicle_can))
+    os.system('sudo ifconfig {} up'.format(vehicle_can))
+
+bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
 db = cantools.database.load_file('../../resources/db/Model3CAN.dbc')
 
 def initMQTT():
     # The callback for when the client receives a CONNACK response from the server.
     def on_connect(client, userdata, flags, rc):
-        print('Connected with result code '+str(rc))
+        print('MQTT connected')
 
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
@@ -24,14 +40,47 @@ def initMQTT():
         publish.single('tesberry/bridge/status', 'online')
 
     def on_disconnect(client, userdata, rc):
-        print('Disconnected with result code '+str(rc))
+        print('MQTT disconnected')
         publish.single('tesberry/bridge/status', 'offline')
 
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
-    client.connect('localhost')
+    client.connect(os.getenv('MQTT_HOSTNAME', 'localhost'))
     return client
+
+def onMQTTMessage(client, userdata, msg):
+    if msg.topic.endswith('/SET'):
+        topic = msg.topic.split('/')
+        payload = jsonpickle.decode(msg.payload)
+        print(topic, payload)
+        details = db.get_message_by_name(topic[2])
+        # Combine payload with cached data
+        data = cache.get(details.frame_id) | payload
+        print(topic, data)
+        hexData = details.encode(data)
+        can_message = can.Message(arbitration_id=details.frame_id, data=hexData, is_extended_id=False)
+        try:
+            bus.send(can_message)
+            pprint('Message sent on {}'.format(bus.channel_info))
+        except can.CanError:
+            pprint('Message not sent')
+
+mqttc = initMQTT()
+mqttc.on_message = onMQTTMessage
+
+@atexit.register
+def closeConnection():
+    if vehicle_can.startswith('v'):
+        # Remove virtual interface
+        os.system('sudo ip link delete {}'.format(vehicle_can))
+    else:
+        # Disconnect to physical interface
+        os.system('sudo ifconfig {} down'.format(vehicle_can))
+    notifier.stop()
+    mqttc.loop_stop()
+    mqttc.disconnect()
+    print('Connection closed.')
 
 def cleanupDict(origDict):
     '''Omit Crc, Counter, Checksum and other unneeded values to reduce mqtt message frequency'''
@@ -42,67 +91,39 @@ def cleanupDict(origDict):
             filteredDict.pop(key)
     return filteredDict
 
-
-def on_message(client, userdata, msg):
-    if msg.topic.endswith('/SET'):
-        topic = msg.topic.split('/')
-        print(topic, jsonpickle.decode(msg.payload))
-        details = db.get_message_by_name(topic[2])
-        data = details.encode(jsonpickle.decode(msg.payload))
-        can_message = can.Message(arbitration_id=details.frame_id, data=data, is_extended_id=False)
-        try:
-            bus.send(can_message)
-            pprint('Message sent on {}'.format(bus.channel_info))
-        except can.CanError:
-            pprint('Message not sent')
-
-mqttc = initMQTT()
-mqttc.on_message = on_message
-
-cache = {}
-
-def handleMessage(msg: can.Message):
+def handleCANMessage(msg: can.Message):
     details = db.get_message_by_frame_id(msg.arbitration_id)
     data = db.decode_message(msg.arbitration_id, msg.data)
     data = cleanupDict(data);
-    # check if values have changed, skip mqtt otherwise
+    # Check if values have changed, skip mqtt otherwise
     if cache.get(msg.arbitration_id) != data:
         cache[msg.arbitration_id] = data
-        print('value changed')
         publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
-
-bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=500000)
 
 async def main():
     '''The main function that runs in the loop.'''
 
-    with can.Bus(interface='socketcan', channel='vcan0') as bus:
-        reader = can.AsyncBufferedReader()
+    reader = can.AsyncBufferedReader()
 
-        listeners = [
-            handleMessage,  # Callback function
-            reader,  # AsyncBufferedReader() listener
-        ]
-        # Create Notifier with an explicit loop to use for scheduling of callbacks
+    listeners = [
+        handleCANMessage,  # Callback function
+        reader,  # AsyncBufferedReader() listener
+    ]
 
-        loop = asyncio.get_running_loop()
-        notifier = can.Notifier(bus, listeners, loop=loop)
+    # Create Notifier with an explicit loop to use for scheduling of callbacks
+    loop = asyncio.get_running_loop()
+    global notifier
+    notifier = can.Notifier(bus, listeners, loop=loop)
 
-        try:
-            mqttc.loop_start()
-            while True:
-                # Wait for next message from AsyncBufferedReader
-                await reader.get_message()
+    try:
+        mqttc.loop_start()
+        while True:
+            # Wait for next message from AsyncBufferedReader
+            await reader.get_message()
 
-        except KeyboardInterrupt:
-            print('Closing Loop')
-            notifier.stop()
-            mqttc.loop_stop()
-            pass
+    except KeyboardInterrupt:
+        print('Closing Loop')
+        pass
 
-asyncio.run(main())
-
-# def closeConnection:
-#     os.system('sudo ifconfig can0 down')
-#     print('Connection closed.')
-# atexit.register(closeConnection)
+if __name__ == "__main__":
+    asyncio.run(main())
