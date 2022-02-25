@@ -2150,7 +2150,7 @@ BO_ 553 ID229GearLever: 3 VehicleBus
  SG_ GearLeverPosition229 : 12|3@1+ (1,0) [0|7] ""  Receiver
  SG_ GearLeverButton229 : 16|2@1+ (1,0) [0|3] ""  Receiver
 
-BO_ 585 ID249SCCMLeftStalk: 4 VehicleBus
+BO_ 585 ID249SCCM_leftStalk: 4 VehicleBus
  SG_ SCCM_highBeamStalkStatus : 12|2@1+ (1,0) [0|3] ""  Receiver
  SG_ SCCM_leftStalkCounter : 8|4@1+ (1,0) [0|15] ""  Receiver
  SG_ SCCM_leftStalkCrc : 0|8@1+ (1,0) [0|255] ""  Receiver
@@ -2505,7 +2505,7 @@ BO_ 513 ID201VCFRONT_loggingAndVitals10H: 8 VehicleBus
 BO_ 984 ID3D8Elevation: 2 VehicleBus
  SG_ Elevation3D8 : 0|14@1- (1,0) [-8192|8191] "M"  Receiver
 
-BO_ 609 ID261_12vBattStatus: 8 VehicleBus
+BO_ 609 ID261VCFRONT_12VBatteryStatus: 8 VehicleBus
  SG_ VCFRONT_12VBatteryStatusChecksum : 56|8@1+ (1,0) [0|0] ""  Receiver
  SG_ VCFRONT_12VBatteryStatusCounter : 52|4@1+ (1,0) [0|0] ""  Receiver
  SG_ VCFRONT_LVBatteryDisconnected m1 : 50|1@1+ (1,0) [0|0] ""  Receiver
