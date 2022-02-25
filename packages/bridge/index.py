@@ -92,13 +92,22 @@ def cleanupDict(origDict):
     return filteredDict
 
 def handleCANMessage(msg: can.Message):
-    details = db.get_message_by_frame_id(msg.arbitration_id)
-    data = db.decode_message(msg.arbitration_id, msg.data)
-    data = cleanupDict(data);
-    # Check if values have changed, skip mqtt otherwise
-    if cache.get(msg.arbitration_id) != data:
-        cache[msg.arbitration_id] = data
-        publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
+    try:
+        details = db.get_message_by_frame_id(msg.arbitration_id)
+    except:
+        pass
+    else:
+        try:
+            data = db.decode_message(msg.arbitration_id, msg.data)
+        except:
+            pass
+            # print('Decoding message failed for ID {}'.format(msg.arbitration_id))
+        else:
+            data = cleanupDict(data);
+            # Check if values have changed, skip mqtt otherwise
+            if cache.get(msg.arbitration_id) != data:
+                cache[msg.arbitration_id] = data
+                publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
 
 async def main():
     '''The main function that runs in the loop.'''
