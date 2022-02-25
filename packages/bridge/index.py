@@ -37,6 +37,7 @@ def initMQTT():
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
         client.subscribe('$SYS/#')
+        client.subscribe('tesberry/+/+/SET')
         publish.single('tesberry/bridge/status', 'online')
 
     def on_disconnect(client, userdata, rc):
@@ -53,18 +54,16 @@ def onMQTTMessage(client, userdata, msg):
     if msg.topic.endswith('/SET'):
         topic = msg.topic.split('/')
         payload = jsonpickle.decode(msg.payload)
-        print(topic, payload)
         details = db.get_message_by_name(topic[2])
         # Combine payload with cached data
         data = cache.get(details.frame_id) | payload
-        print(topic, data)
         hexData = details.encode(data)
         can_message = can.Message(arbitration_id=details.frame_id, data=hexData, is_extended_id=False)
         try:
             bus.send(can_message)
-            pprint('Message sent on {}'.format(bus.channel_info))
+            pprint('CAN message sent')
         except can.CanError:
-            pprint('Message not sent')
+            pprint('CAN message not sent')
 
 mqttc = initMQTT()
 mqttc.on_message = onMQTTMessage
@@ -92,7 +91,7 @@ def cleanupDict(msgName, origDict):
             filteredDict.pop(key)
     return filteredDict
 
-def handleCANMessage(msg: can.Message):
+def onCANMessage(msg: can.Message):
     try:
         details = db.get_message_by_frame_id(msg.arbitration_id)
     except:
@@ -116,7 +115,7 @@ async def main():
     reader = can.AsyncBufferedReader()
 
     listeners = [
-        handleCANMessage,  # Callback function
+        onCANMessage,  # Callback function
         reader,  # AsyncBufferedReader() listener
     ]
 
