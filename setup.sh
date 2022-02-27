@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# Install node.js
-echo "Install node.js"
-curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Install yarn
-echo "Install yarn"
-sudo npm install --global yarn
-
 # Install docker
 echo "Install docker"
 sudo apt-get update
@@ -33,7 +24,3 @@ echo "Install docker-compose"
 # TODO: change to arm64 aka. aarch64
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-armv7" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-
-# Install node modules / dependencies
-echo "Install node modules / dependencies"
-yarn install
