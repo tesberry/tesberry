@@ -8,9 +8,12 @@
 ./setup.sh
 ```
 
-## TODO
+## Roadmap
 - check power state of usb port when sentry mode is off
 - shutdown/sleep/wakeup script
+- speed up boot
+- write tutorial with one command setup without installing git
+- dockerify tesberry bridge
 
 ### Helpful Resources
 - https://stackoverflow.com/questions/23076806/elm327-can-command-to-switch-headlights-pernament-on
