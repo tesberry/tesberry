@@ -1,0 +1,872 @@
+[
+    {
+        "id": "9c740943ae5e6328",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b2e00792011b8eca",
+        "type": "mqtt-broker",
+        "name": "tesberry",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "357435ffe8dc861c",
+        "type": "mqtt in",
+        "z": "9c740943ae5e6328",
+        "name": "leftStalk",
+        "topic": "tesberry/VehicleBus/ID249SCCM_leftStalk",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b2e00792011b8eca",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "73422de5c2d8d50b"
+            ]
+        ]
+    },
+    {
+        "id": "7573357cd0d11eea",
+        "type": "mqtt out",
+        "z": "9c740943ae5e6328",
+        "name": "vehicleControl",
+        "topic": "tesberry/VehicleBus/ID273UI_vehicleControl/SET",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b2e00792011b8eca",
+        "x": 500,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "6096cfe93eb0547d",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"UI_frunkRequest\":1}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 610,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fd4915f9b1f3e0b6",
+        "type": "switch",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "property": "payload.SCCM_washWipeButtonStatus",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1ST_DETENT",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 430,
+        "y": 220,
+        "wires": [
+            [
+                "6096cfe93eb0547d",
+                "b6b732f71565b1da",
+                "8534d1e8c6dbaf3f",
+                "3774ae275cf96d41"
+            ]
+        ]
+    },
+    {
+        "id": "73422de5c2d8d50b",
+        "type": "json",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 290,
+        "y": 220,
+        "wires": [
+            [
+                "fd4915f9b1f3e0b6"
+            ]
+        ]
+    },
+    {
+        "id": "84e6752916fc857e",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "3ad5b8b2d7d9c4fb",
+        "type": "mqtt in",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "topic": "tesberry/VehicleBus/ID102VCLEFT_doorStatus",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b2e00792011b8eca",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 440,
+        "wires": [
+            [
+                "84e6752916fc857e"
+            ]
+        ]
+    },
+    {
+        "id": "435b5cf7080f4556",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "5a435c78b3383070",
+        "type": "mqtt in",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "topic": "tesberry/VehicleBus/ID103VCRIGHT_doorStatus",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b2e00792011b8eca",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 520,
+        "wires": [
+            [
+                "435b5cf7080f4556"
+            ]
+        ]
+    },
+    {
+        "id": "8534d1e8c6dbaf3f",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "383ec8acf35a3e18",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "openFrunk",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"UI_frunkRequest\":1}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 60,
+        "wires": [
+            [
+                "7573357cd0d11eea"
+            ]
+        ]
+    },
+    {
+        "id": "26ba1d5fc90589fd",
+        "type": "mqtt out",
+        "z": "9c740943ae5e6328",
+        "name": "vehicleControl",
+        "topic": "tesberry/VehicleBus/ID273UI_vehicleControl/SET",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b2e00792011b8eca",
+        "x": 1300,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "ec599f36825b4dbb",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "Reset",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "foo",
+                "tot": "str"
+            },
+            {
+                "t": "delete",
+                "p": "payload",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 450,
+        "y": 720,
+        "wires": [
+            [
+                "3774ae275cf96d41"
+            ]
+        ]
+    },
+    {
+        "id": "569b0c2ae678e65e",
+        "type": "inject",
+        "z": "9c740943ae5e6328",
+        "name": "Reset",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 680,
+        "wires": [
+            [
+                "ec599f36825b4dbb"
+            ]
+        ]
+    },
+    {
+        "id": "bccf795de23f9b37",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "Four presses",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1070,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "f2c23c4138f72592",
+        "type": "inject",
+        "z": "9c740943ae5e6328",
+        "name": "Start",
+        "props": [
+            {
+                "p": "payload",
+                "v": "",
+                "vt": "date"
+            },
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 660,
+        "wires": [
+            [
+                "3774ae275cf96d41",
+                "b6b732f71565b1da"
+            ]
+        ]
+    },
+    {
+        "id": "d314b2d1149f772a",
+        "type": "switch",
+        "z": "9c740943ae5e6328",
+        "name": "count presses",
+        "property": "count",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "4",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 630,
+        "y": 760,
+        "wires": [
+            [
+                "fe338e8dabd9c0a9"
+            ],
+            [
+                "9917a46551307b26"
+            ],
+            [
+                "beb1a547b715c36b"
+            ],
+            [
+                "3bbdb7751604366f"
+            ]
+        ],
+        "info": "Just expand the flow.count to how ever many\npresses you want/need."
+    },
+    {
+        "id": "b6b732f71565b1da",
+        "type": "trigger",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "op1": "",
+        "op2": "0",
+        "op1type": "nul",
+        "op2type": "str",
+        "duration": "1",
+        "extend": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "outputs": 1,
+        "x": 280,
+        "y": 760,
+        "wires": [
+            [
+                "859b5553c5deaebc",
+                "d314b2d1149f772a"
+            ]
+        ]
+    },
+    {
+        "id": "76c78d978882b60c",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "Flow set",
+        "rules": [
+            {
+                "t": "set",
+                "p": "count",
+                "pt": "flow",
+                "to": "count",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 610,
+        "y": 650,
+        "wires": [
+            [
+                "6452fd147cd26617"
+            ]
+        ]
+    },
+    {
+        "id": "2193f18b889a6913",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "Tripple press",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1070,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "ce509a6b04b0d006",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "Double press",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1070,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "b86ffd6258961e0a",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "Single Press",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1070,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "fe338e8dabd9c0a9",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "Single Press",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Single Press",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 840,
+        "y": 700,
+        "wires": [
+            [
+                "b86ffd6258961e0a"
+            ]
+        ]
+    },
+    {
+        "id": "9917a46551307b26",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "Double Press",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Double Press",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 850,
+        "y": 740,
+        "wires": [
+            [
+                "ce509a6b04b0d006",
+                "38b3b0367a7311da"
+            ]
+        ]
+    },
+    {
+        "id": "beb1a547b715c36b",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "Tripple Press",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Tripple Press",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 840,
+        "y": 780,
+        "wires": [
+            [
+                "2193f18b889a6913"
+            ]
+        ]
+    },
+    {
+        "id": "3bbdb7751604366f",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "Four Press",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Four Press",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 840,
+        "y": 820,
+        "wires": [
+            [
+                "bccf795de23f9b37"
+            ]
+        ]
+    },
+    {
+        "id": "6452fd147cd26617",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "count",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 650,
+        "wires": []
+    },
+    {
+        "id": "859b5553c5deaebc",
+        "type": "delay",
+        "z": "9c740943ae5e6328",
+        "name": "Delay",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "outputs": 1,
+        "x": 270,
+        "y": 720,
+        "wires": [
+            [
+                "ec599f36825b4dbb"
+            ]
+        ]
+    },
+    {
+        "id": "3774ae275cf96d41",
+        "type": "counter",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "init": "0",
+        "step": "1",
+        "lower": null,
+        "upper": null,
+        "mode": "increment",
+        "outputs": "1",
+        "x": 460,
+        "y": 650,
+        "wires": [
+            [
+                "76c78d978882b60c"
+            ]
+        ]
+    },
+    {
+        "id": "38b3b0367a7311da",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"UI_wiperRequest\":\"WIPER_REQUEST_SLOW_INTERMITTENT\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 640,
+        "wires": [
+            [
+                "26ba1d5fc90589fd",
+                "292ecec9f95f5583"
+            ]
+        ]
+    },
+    {
+        "id": "292ecec9f95f5583",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1290,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "ad95334f06c5c9fd",
+        "type": "mqtt in",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "topic": "tesberry/VehicleBus/ID273UI_vehicleControl",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b2e00792011b8eca",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 250,
+        "y": 380,
+        "wires": [
+            [
+                "cebda1717365f912"
+            ]
+        ]
+    },
+    {
+        "id": "bd947daf4ac7f90d",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.UI_wiperRequest",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "cebda1717365f912",
+        "type": "json",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 610,
+        "y": 380,
+        "wires": [
+            [
+                "bd947daf4ac7f90d"
+            ]
+        ]
+    },
+    {
+        "id": "82849916a6267f4c",
+        "type": "mqtt in",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "topic": "tesberry/VehicleBus/ID122VCLEFT_doorStatus2",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b2e00792011b8eca",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 580,
+        "wires": [
+            [
+                "ba4a51feb8d3e21f"
+            ]
+        ]
+    },
+    {
+        "id": "ba4a51feb8d3e21f",
+        "type": "debug",
+        "z": "9c740943ae5e6328",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "a9cab6ac45631c0e",
+        "type": "inject",
+        "z": "9c740943ae5e6328",
+        "name": "test",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"UI_ambientLightingEnabled\":1}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "8819e04931dbcd4e"
+            ]
+        ]
+    },
+    {
+        "id": "8819e04931dbcd4e",
+        "type": "mqtt out",
+        "z": "9c740943ae5e6328",
+        "name": "vehicleControl",
+        "topic": "tesberry/VehicleBus/ID273UI_vehicleControl/SET",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b2e00792011b8eca",
+        "x": 400,
+        "y": 120,
+        "wires": []
+    }
+]
