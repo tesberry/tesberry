@@ -61,9 +61,9 @@ def onMQTTMessage(client, userdata, msg):
         can_message = can.Message(arbitration_id=details.frame_id, data=hexData, is_extended_id=False)
         try:
             bus.send(can_message)
-            pprint('CAN message sent')
+            print('CAN message sent')
         except can.CanError:
-            pprint('CAN message not sent')
+            print('CAN message not sent')
 
 mqttc = initMQTT()
 mqttc.on_message = onMQTTMessage
