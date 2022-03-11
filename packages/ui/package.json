@@ -1,0 +1,21 @@
+{
+  "name": "@tesberry/ui",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/tesberry/tesberry",
+  "author": "@sapkra",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "express": "4.17.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "17.0.21",
+    "typescript": "4.6.2"
+  }
+}

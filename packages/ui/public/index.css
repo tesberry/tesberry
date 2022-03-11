@@ -1,0 +1,45 @@
+html,
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f1f1f1;
+    padding: 0 20px;
+}
+
+header {
+    display: flex;
+    padding: 20px 0;
+}
+
+header > *:last-child {
+    margin-left: auto;
+}
+
+main {
+    display: flex;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+}
+
+nav button {
+    border: 0;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+nav button svg {
+    margin-right: 15px;
+}
+
+article {
+    padding: 0 50px;
+}
