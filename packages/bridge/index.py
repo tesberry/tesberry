@@ -5,7 +5,6 @@ import asyncio
 import atexit
 import can
 import cantools
-import json
 import jsonpickle
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
