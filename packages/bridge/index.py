@@ -80,16 +80,6 @@ def closeConnection():
     mqttc.disconnect()
     print('Connection closed.')
 
-def cleanupDict(msgName, origDict):
-    '''Omit Crc, Counter, Checksum and other unneeded values to reduce mqtt message frequency'''
-    filteredDict = origDict;
-    shortMsgName = msgName[5:]
-    for key in list(origDict):
-        # Check if signal has the same name as message to not remove signals like the UI_falseTouchCounter
-        if (key.startswith(shortMsgName) and key.endswith(('Checksum', 'Counter', 'Crc'))):
-            filteredDict.pop(key)
-    return filteredDict
-
 def onCANMessage(msg: can.Message):
     try:
         details = db.get_message_by_frame_id(msg.arbitration_id)
@@ -102,11 +92,8 @@ def onCANMessage(msg: can.Message):
             pass
             # print('Decoding message failed for ID {}'.format(msg.arbitration_id))
         else:
-            data = cleanupDict(details.name, data);
-            # Check if values have changed, skip mqtt otherwise
-            if cache.get(msg.arbitration_id) != data:
-                cache[msg.arbitration_id] = data
-                publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
+            cache[msg.arbitration_id] = data
+            publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
 
 async def main():
     '''The main function that runs in the loop.'''
