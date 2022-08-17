@@ -1,6 +1,6 @@
 FROM python
 
-RUN apt-get update && apt-get install -y net-tools
+RUN apt update && apt install -y net-tools iproute2
 
 COPY . .
 
