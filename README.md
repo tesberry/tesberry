@@ -20,6 +20,7 @@
 | Portainer             | true    | 9000        | Web Interface to manage the Docker Containers                   |
 | SavvyCan MQTT Bridge  | false   | -           | Bridges the CAN Messages to MQTT to debug them with SavvyCAN    |
 | Mosquitto MQTT Broker | true    | 1883 / 9001 | The MQTT Broker to where all services are communicating through |
+| NodeRED               | true    | 1880        | The rule engine to listen to and write CAN messages             |
 
 ## Roadmap
 - check power state of usb port when sentry mode is off
