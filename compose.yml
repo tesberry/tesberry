@@ -22,3 +22,12 @@ services:
     ports:
       - "1880:1880"
     user: "1000"
+
+  portainer:
+    image: portainer/portainer-ce
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/portainer/:/data
+    ports:
+      - 9000:9000
