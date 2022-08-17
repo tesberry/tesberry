@@ -46,7 +46,7 @@ def initMQTT():
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
-    client.connect(os.getenv('MQTT_HOSTNAME', 'localhost'))
+    client.connect(os.getenv('MQTT_HOST', 'localhost'))
     return client
 
 def onMQTTMessage(client, userdata, msg):
