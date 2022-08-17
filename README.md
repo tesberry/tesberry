@@ -4,16 +4,26 @@
 
 ## Setup
 
-```bash
-./setup.sh
-```
+1. Flash Raspberry Pi OS using the Raspberry Pi Imager with the following settings:
+   1. Set hostname to `tesberryPi` 
+   2. Enable SHH
+   3. Set a username and password
+   4. Configure your network and region
+2. Start Raspberry Pi and connect via SSH
+3. Run `bash <(curl -s https://raw.githubusercontent.com/tesberry/tesberry/main/setup.sh)` on your Pi
+
+## Stack
+| Service               | Enabled | Port        | Description                                                     |
+| --------------------- | ------- | ----------- | --------------------------------------------------------------- |
+| Tesberry UI           | true    | 80          | The Web Interface for Tesberry in the Tesla Browser             |
+| Tesberry Bridge       | true    | -           | Bridges the CAN Messages to MQTT and decodes/encodes them       |
+| Portainer             | true    | 9000        | Web Interface to manage the Docker Containers                   |
+| SavvyCan MQTT Bridge  | false   | -           | Bridges the CAN Messages to MQTT to debug them with SavvyCAN    |
+| Mosquitto MQTT Broker | true    | 1883 / 9001 | The MQTT Broker to where all services are communicating through |
 
 ## Roadmap
 - check power state of usb port when sentry mode is off
-- shutdown/sleep/wakeup script
 - speed up boot
-- write tutorial with one command setup without installing git
-- dockerify tesberry bridge
 
 ### Read and Write from/to CAN bus
 You can pretty much read but not write everything. Some values have a checksum, so it's not possible to write them, but UI values should not have a checksum. To rewrite a value we will read a message in the CAN bus, change a value and immediately send it again.
