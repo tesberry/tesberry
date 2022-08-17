@@ -8,4 +8,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT [ "python", "savvycan-mqtt.py", "-H", $MQTT_HOST, "-P", $MQTT_PORT, "-i", $CHANNEL]
+ENTRYPOINT [ "python", "savvycan-mqtt.py", "-H", $MQTT_HOST, "-P", $MQTT_PORT, "-i", $CHANNEL ]
