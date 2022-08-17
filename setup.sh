@@ -1,9 +1,13 @@
 #!/bin/bash
 
+# Update device
+echo "-------- Updating device --------"
+sudo apt update
+sudo apt upgrade -y
+
 # Install docker
-echo "Install docker"
-sudo apt-get update
-sudo apt-get install \
+echo "-------- Install docker --------"
+sudo apt install -y \
     ca-certificates \
     curl \
     gnupg \
@@ -20,7 +24,13 @@ sudo usermod -aG docker $USER
 newgrp docker
 
 # Install docker-compose
-echo "Install docker-compose"
+echo "-------- Install docker-compose --------"
 # TODO: change to arm64 aka. aarch64
-sudo curl -L "https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-armv7" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.9.0/docker-compose-linux-armv7" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+
+# Get tesberry
+echo "-------- tesberry --------"
+git clone https://github.com/tesberry/tesberry.git
+cd tesberry
+docker-compose up -d
