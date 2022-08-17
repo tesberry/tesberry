@@ -1,5 +1,11 @@
 FROM python
 
-ADD https://raw.githubusercontent.com/collin80/SavvyCAN/master/pythoncan.py savvycan-mqtt.py
+ENV CHANNEL "can0"
+ENV MQTT_HOST "localhost"
+ENV MQTT_PORT "1883"
 
-ENTRYPOINT [ "python", "savvycan-mqtt.py" ]
+COPY . .
+
+RUN pip install -r requirements.txt
+
+ENTRYPOINT [ "python", "savvycan-mqtt.py", "-H ${MQTT_HOST}}", "-P ${MQTT_PORT}}", "-i ${CHANNEL}}"]
