@@ -40,4 +40,4 @@ echo "disable_splash=1" >> /boot/config.txt
 echo "boot_delay=0" >> /boot/config.txt
 echo -n " fastboot" >> /boot/cmdline.txt
 
-echo "Done"
+echo "-------- Done --------"
