@@ -30,25 +30,25 @@ parser.add_argument('-u', action='store', dest='username', help='Specify MQTT Us
 parser.add_argument('-p', action='store', dest='password', help='Specify MQTT Password')
 parser.add_argument('-b', action='store', dest='bustype', default='socketcan', help='Set usage of a different bus type (defaults to socketcan)')
 parser.add_argument('-i', action='store', dest='channel', default='can0', help='Specify which socketcan interface to use')
-parser.add_argument('-s', action='store', dest='speed', default=500000, type=int, help='Set speed of socketcan interface')
+parser.add_argument('-s', action='store', dest='speed', default='500000', help='Set speed of socketcan interface')
 parser.add_argument('-t', action='store', dest='topic', default="can", help='Set MQTT topic to use')
 parser.add_argument('-H', action='store', dest='mqtthost', default="api.savvycan.com", help='Set hostname of MQTT Broker')
-parser.add_argument('-P', action='store', dest='mqttport', default=8883, type=int, help='Set port to connect to on MQTT Broker')
+parser.add_argument('-P', action='store', dest='mqttport', default='8883', help='Set port to connect to on MQTT Broker')
 
 arg_results = parser.parse_args()
 
-bus = can.interface.Bus(channel=arg_results.channel, bustype=arg_results.bustype, bitrate=arg_results.speed)
+bus = can.interface.Bus(channel=arg_results.channel, bustype=arg_results.bustype, bitrate=int(arg_results.speed))
 	
 client = mqtt.Client(client_id=client_id, clean_session=True)
 client.on_connect = on_connect
 client.on_message = on_message
 
-if arg_results.mqttport == 8883:
+if arg_results.mqttport == '8883':
 	client.tls_set(ca_certs=None, certfile=None, keyfile=None, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLS, ciphers=None)
 if len(arg_results.username) > 0:
 	client.username_pw_set(arg_results.username, arg_results.password)
 
-client.connect(arg_results.mqtthost, arg_results.mqttport, 60)
+client.connect(arg_results.mqtthost, int(arg_results.mqttport), 60)
 
 run = True
 while run:
