@@ -4,7 +4,7 @@
 
 ## Setup
 
-1. Flash Raspberry Pi OS using the Raspberry Pi Imager with the following settings:
+1. Flash Raspberry Pi OS Lite (32-bit) using the Raspberry Pi Imager with the following settings:
    1. Set hostname to `tesberryPi` 
    2. Enable SHH
    3. Set a username and password
