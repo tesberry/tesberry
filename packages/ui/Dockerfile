@@ -2,8 +2,10 @@ FROM node
 
 COPY . .
 
+RUN yarn install
+
 ENV NODE_ENV="production"
 
-RUN yarn install && yarn build
+RUN yarn build
 
 ENTRYPOINT [ "yarn", "start" ]
