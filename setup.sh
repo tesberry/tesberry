@@ -25,7 +25,6 @@ newgrp docker
 
 # Install docker-compose
 echo "-------- Install docker-compose --------"
-# TODO: change to arm64 aka. aarch64
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.9.0/docker-compose-linux-armv7" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
@@ -34,3 +33,11 @@ echo "-------- tesberry --------"
 git clone https://github.com/tesberry/tesberry.git
 cd tesberry
 docker-compose up -d
+
+# Improve Boot Time
+echo "-------- Improve Boot Time --------"
+echo "disable_splash=1" >> /boot/config.txt
+echo "boot_delay=0" >> /boot/config.txt
+echo -n " fastboot" >> /boot/cmdline.txt
+
+echo "Done"
