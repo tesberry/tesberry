@@ -15,15 +15,16 @@ notifier = None
 cache = {}
 vehicle_can = os.getenv('VEHICLE_CAN', 'can0')
 
+# TODO: test if these commands are working without sudo rights
 if vehicle_can.startswith('v'):
     # Setting up a virtual interface
-    os.system('sudo modprobe vcan')
-    os.system('sudo ip link add {} type vcan bitrate 500000'.format(vehicle_can))
-    os.system('sudo ip link set {} up'.format(vehicle_can))
+    os.system('modprobe vcan')
+    os.system('ip link add {} type vcan bitrate 500000'.format(vehicle_can))
+    os.system('ip link set {} up'.format(vehicle_can))
 else:
     # Connect to physical interface
-    os.system('sudo ip link set {} type can bitrate 500000'.format(vehicle_can))
-    os.system('sudo ifconfig {} up'.format(vehicle_can))
+    os.system('ip link set {} type can bitrate 500000'.format(vehicle_can))
+    os.system('ifconfig {} up'.format(vehicle_can))
 
 bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
 db = cantools.database.load_file('../../resources/db/Model3CAN.dbc')
