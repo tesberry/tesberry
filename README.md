@@ -24,6 +24,7 @@
 ## Roadmap
 - check power state of usb port when sentry mode is off
 - speed up boot
+- 64-bit support
 
 ### Read and Write from/to CAN bus
 You can pretty much read but not write everything. Some values have a checksum, so it's not possible to write them, but UI values should not have a checksum. To rewrite a value we will read a message in the CAN bus, change a value and immediately send it again.
