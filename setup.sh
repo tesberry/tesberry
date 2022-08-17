@@ -32,6 +32,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 echo "-------- tesberry --------"
 git clone https://github.com/tesberry/tesberry.git
 cd tesberry
+docker-compose build
 docker-compose up -d
 
 # Improve Boot Time
