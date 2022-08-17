@@ -59,7 +59,7 @@
         "type": "mqtt out",
         "z": "9c740943ae5e6328",
         "name": "vehicleControl",
-        "topic": "tesberry/VehicleBus/ID273UI_vehicleControl/SET",
+        "topic": "tesberry/VehicleBus/ID3B3UI_vehicleControl2/SET",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -68,8 +68,8 @@
         "correl": "",
         "expiry": "",
         "broker": "b2e00792011b8eca",
-        "x": 500,
-        "y": 60,
+        "x": 1260,
+        "y": 520,
         "wires": []
     },
     {
@@ -146,7 +146,7 @@
         "type": "debug",
         "z": "9c740943ae5e6328",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -183,7 +183,7 @@
         "type": "debug",
         "z": "9c740943ae5e6328",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -235,13 +235,13 @@
         "id": "383ec8acf35a3e18",
         "type": "change",
         "z": "9c740943ae5e6328",
-        "name": "openFrunk",
+        "name": "openTrunk",
         "rules": [
             {
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "{\"UI_frunkRequest\":1}",
+                "to": "{\"UI_trunkRequest\":1}",
                 "tot": "json"
             }
         ],
@@ -250,8 +250,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 310,
-        "y": 60,
+        "x": 1070,
+        "y": 520,
         "wires": [
             [
                 "7573357cd0d11eea"
@@ -545,7 +545,8 @@
         "y": 700,
         "wires": [
             [
-                "b86ffd6258961e0a"
+                "b86ffd6258961e0a",
+                "383ec8acf35a3e18"
             ]
         ]
     },
@@ -572,8 +573,7 @@
         "y": 740,
         "wires": [
             [
-                "ce509a6b04b0d006",
-                "38b3b0367a7311da"
+                "ce509a6b04b0d006"
             ]
         ]
     },
@@ -701,7 +701,7 @@
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "{\"UI_wiperRequest\":\"WIPER_REQUEST_SLOW_INTERMITTENT\"}",
+                "to": "{\"UI_wiperMode\":\"WIPER_MODE_PARK\"}",
                 "tot": "json"
             }
         ],
@@ -724,7 +724,7 @@
         "type": "debug",
         "z": "9c740943ae5e6328",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -815,7 +815,7 @@
         "type": "debug",
         "z": "9c740943ae5e6328",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -868,5 +868,30 @@
         "x": 400,
         "y": 120,
         "wires": []
+    },
+    {
+        "id": "cfb1e9d44456c6ee",
+        "type": "change",
+        "z": "9c740943ae5e6328",
+        "name": "openFrunk",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"UI_frunkRequest\":1}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1070,
+        "y": 580,
+        "wires": [
+            []
+        ]
     }
 ]
