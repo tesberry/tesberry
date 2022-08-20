@@ -27,17 +27,6 @@ else:
     os.system('ip link set {} type can bitrate 500000'.format(vehicle_can))
     os.system('ifconfig {} up'.format(vehicle_can))
 
-def sigterm_handler():
-    if vehicle_can.startswith('v'):
-        # Shutting down the virtual interface
-        os.system('ip link set {} down'.format(vehicle_can))
-    else:
-        # Shutting down the physical interface
-        os.system('ifconfig {} down'.format(vehicle_can))
-    sys.exit(0)
-
-signal.signal(signal.SIGTERM, sigterm_handler)
-
 bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
 db = cantools.database.load_file('./db/Model3CAN.dbc')
 
@@ -84,10 +73,10 @@ mqttc.on_message = onMQTTMessage
 def closeConnection():
     if vehicle_can.startswith('v'):
         # Remove virtual interface
-        os.system('sudo ip link delete {}'.format(vehicle_can))
+        os.system('ip link delete {}'.format(vehicle_can))
     else:
         # Disconnect to physical interface
-        os.system('sudo ifconfig {} down'.format(vehicle_can))
+        os.system('ifconfig {} down'.format(vehicle_can))
     notifier.stop()
     mqttc.loop_stop()
     mqttc.disconnect()
