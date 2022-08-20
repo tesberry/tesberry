@@ -9,13 +9,14 @@ import jsonpickle
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 from dotenv import load_dotenv
+import sys
+import signal
 
 load_dotenv()
 notifier = None
 cache = {}
 vehicle_can = os.getenv('VEHICLE_CAN', 'can0')
 
-# TODO: test if these commands are working without sudo rights
 if vehicle_can.startswith('v'):
     # Setting up a virtual interface
     os.system('modprobe vcan')
@@ -25,6 +26,18 @@ else:
     # Connect to physical interface
     os.system('ip link set {} type can bitrate 500000'.format(vehicle_can))
     os.system('ifconfig {} up'.format(vehicle_can))
+
+def sigterm_handler():
+    if vehicle_can.startswith('v'):
+        # Shutting down the virtual interface
+        os.system('ip link set {} down'.format(vehicle_can))
+    else:
+        # Shutting down the physical interface
+        os.system('ifconfig {} down'.format(vehicle_can))
+    sys.exit(0)
+
+if sys.argv[1] == 'handle_signal':
+    signal.signal(signal.SIGTERM, sigterm_handler)
 
 bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
 db = cantools.database.load_file('./db/Model3CAN.dbc')
