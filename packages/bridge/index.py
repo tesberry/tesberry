@@ -26,21 +26,6 @@ else:
     os.system('ip link set {} type can bitrate 500000'.format(vehicle_can))
     os.system('ifconfig {} up'.format(vehicle_can))
 
-@atexit.register
-def closeConnection():
-    if vehicle_can.startswith('v'):
-        # Remove virtual interface
-        os.system('ip link delete {}'.format(vehicle_can))
-    else:
-        # Disconnect to physical interface
-        os.system('ifconfig {} down'.format(vehicle_can))
-    notifier.stop()
-    mqttc.loop_stop()
-    mqttc.disconnect()
-    print('Connection closed.')
-
-signal.signal(signal.SIGTERM, closeConnection)
-
 bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
 db = cantools.database.load_file('./db/Model3CAN.dbc')
 
@@ -125,3 +110,18 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+@atexit.register
+def closeConnection():
+    if vehicle_can.startswith('v'):
+        # Remove virtual interface
+        os.system('ip link delete {}'.format(vehicle_can))
+    else:
+        # Disconnect to physical interface
+        os.system('ifconfig {} down'.format(vehicle_can))
+    notifier.stop()
+    mqttc.loop_stop()
+    mqttc.disconnect()
+    print('Connection closed.')
+
+signal.signal(signal.SIGTERM, closeConnection)
