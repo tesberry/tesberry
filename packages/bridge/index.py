@@ -9,7 +9,6 @@ import jsonpickle
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 from dotenv import load_dotenv
-import sys
 import signal
 
 load_dotenv()
@@ -26,6 +25,21 @@ else:
     # Connect to physical interface
     os.system('ip link set {} type can bitrate 500000'.format(vehicle_can))
     os.system('ifconfig {} up'.format(vehicle_can))
+
+@atexit.register
+def closeConnection():
+    if vehicle_can.startswith('v'):
+        # Remove virtual interface
+        os.system('ip link delete {}'.format(vehicle_can))
+    else:
+        # Disconnect to physical interface
+        os.system('ifconfig {} down'.format(vehicle_can))
+    notifier.stop()
+    mqttc.loop_stop()
+    mqttc.disconnect()
+    print('Connection closed.')
+
+signal.signal(signal.SIGTERM, closeConnection)
 
 bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
 db = cantools.database.load_file('./db/Model3CAN.dbc')
@@ -68,19 +82,6 @@ def onMQTTMessage(client, userdata, msg):
 
 mqttc = initMQTT()
 mqttc.on_message = onMQTTMessage
-
-@atexit.register
-def closeConnection():
-    if vehicle_can.startswith('v'):
-        # Remove virtual interface
-        os.system('ip link delete {}'.format(vehicle_can))
-    else:
-        # Disconnect to physical interface
-        os.system('ifconfig {} down'.format(vehicle_can))
-    notifier.stop()
-    mqttc.loop_stop()
-    mqttc.disconnect()
-    print('Connection closed.')
 
 def onCANMessage(msg: can.Message):
     try:
