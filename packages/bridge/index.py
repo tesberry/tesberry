@@ -36,8 +36,7 @@ def sigterm_handler():
         os.system('ifconfig {} down'.format(vehicle_can))
     sys.exit(0)
 
-if sys.argv[1] == 'handle_signal':
-    signal.signal(signal.SIGTERM, sigterm_handler)
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
 db = cantools.database.load_file('./db/Model3CAN.dbc')
