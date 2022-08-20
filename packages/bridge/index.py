@@ -27,7 +27,7 @@ else:
     os.system('ifconfig {} up'.format(vehicle_can))
 
 bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
-db = cantools.database.load_file('../../resources/db/Model3CAN.dbc')
+db = cantools.database.load_file('./db/Model3CAN.dbc')
 
 def initMQTT():
     # The callback for when the client receives a CONNACK response from the server.
