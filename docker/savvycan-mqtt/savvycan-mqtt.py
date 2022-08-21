@@ -1,4 +1,3 @@
-import argparse
 import uuid
 import can
 import paho.mqtt.client as mqtt
@@ -19,7 +18,7 @@ def on_connect(client, userdata, flags, rc):
 
 	# Subscribing in on_connect() means that if we lose the connection and
 	# reconnect then subscriptions will be renewed.
-	client.subscribe(arg_results.topic + "/+", qos=0)
+	client.subscribe(topic + "/+", qos=0)
 	
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -27,56 +26,53 @@ def on_message(client, userdata, msg):
 	
 client_id = str(uuid.uuid4())
 
-parser = argparse.ArgumentParser(description='SocketCAN To MQTT Conduit')
-parser.add_argument('-u', action='store', dest='username', help='Specify MQTT Username')
-parser.add_argument('-p', action='store', dest='password', help='Specify MQTT Password')
-parser.add_argument('-b', action='store', dest='bustype', default='socketcan', help='Set usage of a different bus type (defaults to socketcan)')
-parser.add_argument('-i', action='store', dest='channel', default='can0', help='Specify which socketcan interface to use')
-parser.add_argument('-s', action='store', dest='speed', default='500000', help='Set speed of socketcan interface')
-parser.add_argument('-t', action='store', dest='topic', default="can", help='Set MQTT topic to use')
-parser.add_argument('-H', action='store', dest='mqtthost', default="api.savvycan.com", help='Set hostname of MQTT Broker')
-parser.add_argument('-P', action='store', dest='mqttport', default='8883', help='Set port to connect to on MQTT Broker')
+username = os.getenv('MQTT_USERNAME') # Specify MQTT Username
+password = os.getenv('MQTT_PASSWORD') # Specify MQTT Password
+bustype = os.getenv('BUSTYPE', 'socketcan') # Set usage of a different bus type (defaults to socketcan)
+channel = os.getenv('CHANNEL', 'can0') # Specify which socketcan interface to use
+speed = os.getenv('SPEED', '500000') # Set speed of socketcan interface
+topic = os.getenv('TOPIC', 'can') # Set MQTT topic to use
+mqtthost = os.getenv('MQTT_HOST', 'can') # Set hostname of MQTT Broker
+mqttport = os.getenv('MQTT_PORT', 'can') # Set port to connect to on MQTT Broker
 
-arg_results = parser.parse_args()
-
-if arg_results.channel.startswith('v'):
+if channel.startswith('v'):
     # Setting up a virtual interface
     os.system('modprobe vcan')
-    os.system('ip link add {} type vcan bitrate 500000'.format(arg_results.channel))
-    os.system('ip link set {} up'.format(arg_results.channel))
+    os.system('ip link add {} type vcan bitrate 500000'.format(channel))
+    os.system('ip link set {} up'.format(channel))
 else:
     # Connect to physical interface
-    os.system('ip link set {} type can bitrate 500000'.format(arg_results.channel))
-    os.system('ifconfig {} up'.format(arg_results.channel))
+    os.system('ip link set {} type can bitrate 500000'.format(channel))
+    os.system('ifconfig {} up'.format(channel))
 
 def closeConnection():
-    if arg_results.channel.startswith('v'):
+    if channel.startswith('v'):
         # Remove virtual interface
-        os.system('ip link delete {}'.format(arg_results.channel))
+        os.system('ip link delete {}'.format(channel))
     else:
         # Disconnect to physical interface
-        os.system('ifconfig {} down'.format(arg_results.channel))
+        os.system('ifconfig {} down'.format(channel))
     print('Connection closed.')
 
 atexit.register(closeConnection)
 signal.signal(signal.SIGTERM, closeConnection)
 
-print(arg_results.channel)
-print(arg_results.bustype)
-print(int(arg_results.speed))
+print(channel)
+print(bustype)
+print(int(speed))
 
-bus = can.interface.Bus(channel=arg_results.channel, bustype=arg_results.bustype, bitrate=int(arg_results.speed))
+bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=int(speed))
 	
 client = mqtt.Client(client_id=client_id, clean_session=True)
 client.on_connect = on_connect
 client.on_message = on_message
 
-if arg_results.mqttport == '8883':
+if mqttport == '8883':
 	client.tls_set(ca_certs=None, certfile=None, keyfile=None, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLS, ciphers=None)
-if len(arg_results.username) > 0:
-	client.username_pw_set(arg_results.username, arg_results.password)
+if len(username) > 0:
+	client.username_pw_set(username, password)
 
-client.connect(arg_results.mqtthost, int(arg_results.mqttport), 60)
+client.connect(mqtthost, int(mqttport), 60)
 
 run = True
 while run:
@@ -90,5 +86,5 @@ while run:
 		if (msg.is_fd): flags += 4
 		if (msg.error_state_indicator): flags += 8
 		microsStamp = int(msg.timestamp * 1000000).to_bytes(8, 'little')
-		fullTopic = arg_results.topic + "/" + str(msg.arbitration_id)
+		fullTopic = topic + "/" + str(msg.arbitration_id)
 		client.publish(fullTopic, microsStamp + int(flags).to_bytes(1, 'little') + msg.data, qos=0)
