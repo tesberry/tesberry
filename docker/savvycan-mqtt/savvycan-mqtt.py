@@ -4,6 +4,8 @@ import can
 import paho.mqtt.client as mqtt
 import ssl
 import os
+import atexit
+import signal
 
 #def sender(id):
 #	for i in range(10):
@@ -46,6 +48,20 @@ else:
     # Connect to physical interface
     os.system('ip link set {} type can bitrate 500000'.format(arg_results.channel))
     os.system('ifconfig {} up'.format(arg_results.channel))
+
+def closeConnection():
+    if arg_results.channel.startswith('v'):
+        # Remove virtual interface
+        os.system('ip link delete {}'.format(arg_results.channel))
+    else:
+        # Disconnect to physical interface
+        os.system('ifconfig {} down'.format(arg_results.channel))
+    client.loop_stop()
+    client.disconnect()
+    print('Connection closed.')
+
+atexit.register(closeConnection)
+signal.signal(signal.SIGTERM, closeConnection)
 
 bus = can.interface.Bus(channel=arg_results.channel, bustype=arg_results.bustype, bitrate=int(arg_results.speed))
 	
