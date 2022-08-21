@@ -32,8 +32,8 @@ bustype = os.getenv('BUSTYPE', 'socketcan') # Set usage of a different bus type 
 channel = os.getenv('CHANNEL', 'can0') # Specify which socketcan interface to use
 speed = os.getenv('SPEED', '500000') # Set speed of socketcan interface
 topic = os.getenv('TOPIC', 'can') # Set MQTT topic to use
-mqtthost = os.getenv('MQTT_HOST', 'can') # Set hostname of MQTT Broker
-mqttport = os.getenv('MQTT_PORT', 'can') # Set port to connect to on MQTT Broker
+mqtthost = os.getenv('MQTT_HOST', 'localhost') # Set hostname of MQTT Broker
+mqttport = os.getenv('MQTT_PORT', '1883') # Set port to connect to on MQTT Broker
 
 if channel.startswith('v'):
     # Setting up a virtual interface
@@ -69,7 +69,7 @@ client.on_message = on_message
 
 if mqttport == '8883':
 	client.tls_set(ca_certs=None, certfile=None, keyfile=None, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLS, ciphers=None)
-if len(username) > 0:
+if username:
 	client.username_pw_set(username, password)
 
 client.connect(mqtthost, int(mqttport), 60)
