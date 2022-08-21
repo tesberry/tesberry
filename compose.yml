@@ -5,10 +5,10 @@ services:
     build: ./packages/bridge
     restart: always
     network_mode: host
-    environment:
-      - VEHICLE_CAN=can0
     cap_add:
       - NET_ADMIN
+    environment:
+      - VEHICLE_CAN=can0
 
   tesberry-ui:
     build: ./packages/ui
@@ -28,6 +28,8 @@ services:
     build: ./docker/savvycan-mqtt
     restart: "no"
     network_mode: host
+    cap_add:
+      - NET_ADMIN
     environment:
       - CHANNEL=can0
       - MQTT_HOST=localhost
