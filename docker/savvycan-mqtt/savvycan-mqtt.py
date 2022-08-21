@@ -56,8 +56,6 @@ def closeConnection():
     else:
         # Disconnect to physical interface
         os.system('ifconfig {} down'.format(arg_results.channel))
-    client.loop_stop()
-    client.disconnect()
     print('Connection closed.')
 
 atexit.register(closeConnection)
