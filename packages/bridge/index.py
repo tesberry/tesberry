@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import signal
 
 load_dotenv()
+mqttc = None
 notifier = None
 cache = {}
 vehicle_can = os.getenv('VEHICLE_CAN', 'can0')
@@ -77,9 +78,6 @@ def onMQTTMessage(client, userdata, msg):
         except can.CanError:
             print('CAN message not sent')
 
-mqttc = initMQTT()
-mqttc.on_message = onMQTTMessage
-
 def onCANMessage(msg: can.Message):
     try:
         details = db.get_message_by_frame_id(msg.arbitration_id)
@@ -97,6 +95,9 @@ def onCANMessage(msg: can.Message):
 
 async def main():
     '''The main function that runs in the loop.'''
+
+    mqttc = initMQTT()
+    mqttc.on_message = onMQTTMessage
 
     reader = can.AsyncBufferedReader()
 
