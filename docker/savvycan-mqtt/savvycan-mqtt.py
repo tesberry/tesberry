@@ -4,6 +4,7 @@ import uuid
 import can
 import paho.mqtt.client as mqtt
 import ssl
+import os
 
 #def sender(id):
 #	for i in range(10):
@@ -36,6 +37,16 @@ parser.add_argument('-H', action='store', dest='mqtthost', default="api.savvycan
 parser.add_argument('-P', action='store', dest='mqttport', default='8883', help='Set port to connect to on MQTT Broker')
 
 arg_results = parser.parse_args()
+
+if arg_results.channel.startswith('v'):
+    # Setting up a virtual interface
+    os.system('modprobe vcan')
+    os.system('ip link add {} type vcan bitrate 500000'.format(arg_results.channel))
+    # os.system('ip link set {} up'.format(arg_results.channel))
+else:
+    # Connect to physical interface
+    os.system('ip link set {} type can bitrate 500000'.format(arg_results.channel))
+    # os.system('ifconfig {} up'.format(arg_results.channel))
 
 bus = can.interface.Bus(channel=arg_results.channel, bustype=arg_results.bustype, bitrate=int(arg_results.speed))
 	
