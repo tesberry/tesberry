@@ -57,10 +57,6 @@ def closeConnection():
 atexit.register(closeConnection)
 signal.signal(signal.SIGTERM, closeConnection)
 
-print(channel)
-print(bustype)
-print(int(speed))
-
 bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=int(speed))
 	
 client = mqtt.Client(client_id=client_id, clean_session=True)
