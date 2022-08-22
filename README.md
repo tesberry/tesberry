@@ -29,7 +29,7 @@ There are 2 problems we have to solve:
 1. The Tesla does not connect to a WIFI Network without an internet connection
 2. The Tesla web browser is locked to only access public IPs, so we cannot use a hostnames or local IP
 
-One way to solve these issues is to setup a mobile 4G/5G router in your car (usually you can use 5V or 12V to power them) and connect your Raspberry Pi to it. Then you have to setup a static route from a public IP like `42.42.42.42` to the IP address of your Raspberry Pi, which also should be configured to a static IP in the router settings.
+One way to solve these issues is to setup a mobile 4G/5G router in your car (usually you can use 5V or 12V to power them) and connect your Raspberry Pi to it. Then you have to setup a static IP lease in your Router for your Raspberry Pi to get `192.186.1.42` as it's IP address. After this is done you need to forward port `80` from `42.42.42.42` to `192.186.1.42`. Additionally you can setup a hostname like `tesberry` for `42.42.42.42`. Now you can access your tesberry UI with your Tesla browser using `http://tesberry/`.
 
 ## Roadmap
 - check power state of usb port when sentry mode is off
