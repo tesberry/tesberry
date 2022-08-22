@@ -16,7 +16,7 @@ import os
 
 class Server:
 
-	def __init__(self, port=os.getenv('PORT', 9000), thread_pool=100):
+	def __init__(self, port=int(os.getenv('PORT', 9000)), thread_pool=100):
 		self.streams = []
 		self.streamdata = []
 		self.addr = ('', port)
