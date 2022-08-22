@@ -25,7 +25,7 @@ services:
       - 9001:9001
 
   savvycan-mqtt:
-    build: ./docker/savvycan-mqtt
+    build: ./packages/savvycan-mqtt
     restart: "no"
     network_mode: host
     cap_add:
