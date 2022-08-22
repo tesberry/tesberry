@@ -360,7 +360,7 @@ def _send_int(filename, i):
 
 def _copy_assets(ar):
     def get(filename):
-        with open(filename, "rb") as f:
+        with open(filename, "rb", 0) as f:
             return f.read()
     return [SendFile(f"/tmp/{x}", get(f"assets/{x}")) for x in ar]
 

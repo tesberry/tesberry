@@ -42,7 +42,7 @@ class Decoder:
 					self.owner.on_frame(png)
 
 	def __init__(self):
-		self.child = subprocess.Popen(["ffmpeg", "-threads", "4", "-i", "-", "-vf", "fps=7", "-c:v", "png", "-f", "image2pipe", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=1)
+		self.child = subprocess.Popen(["ffmpeg", "-threads", "4", "-i", "-", "-vf", "fps=7", "-c:v", "png", "-f", "image2pipe", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=0)
 		fd = self.child.stdout.fileno()
 		fl = fcntl.fcntl(fd, fcntl.F_GETFL)
 		fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
