@@ -35,6 +35,13 @@ services:
       - MQTT_HOST=localhost
       - MQTT_PORT=1883
 
+  pycarplay:
+    build: ./packages/pycarplay
+    restart: "no"
+    network_mode: host
+    environment:
+     - PORT=9002
+
   nodered:
     image: nodered/node-red:latest
     restart: always
