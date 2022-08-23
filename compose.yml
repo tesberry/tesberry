@@ -40,11 +40,12 @@ services:
   carplay:
     build: ./packages/carplay
     restart: "no"
-    network_mode: host
     ports:
       - 3001:3001
     environment:
       - LIBUSB_DEBUG=9
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb
 
   nodered:
     image: nodered/node-red:latest

@@ -2,7 +2,6 @@ FROM node
 
 # TODO: download assets on build
 RUN apt update && apt install -y ffmpeg
-RUN ln -s /sys/bus /dev/bus
 
 COPY . .
 
