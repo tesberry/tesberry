@@ -41,10 +41,10 @@ export const Carplay: React.FC<CarplayProps> = ({ status, settings, changeSettin
   });
 
   useEffect(() => {
-    if (!ws) return;
+    if (!ws || !videoRef.current) return;
     console.log("creating carplay", settings)
     const jmuxer = new JMuxer({
-      node: 'player',
+      node: videoRef.current,
       mode: 'video',
       fps: settings.fps,
       flushingTime: 100,
@@ -165,7 +165,7 @@ export const Carplay: React.FC<CarplayProps> = ({ status, settings, changeSettin
            }
          }}
          style={{height: '100%', width: '100%', padding: 0, margin: 0, display: 'flex'}}>
-        <video ref={videoRef} style={{ height: status ? "100%" : "0%" }} autoPlay muted id="player" />
+        <video ref={videoRef} style={{ height: status ? "100%" : "0%" }} autoPlay muted />
         {status ? <div></div>
           :
           <div style={{marginTop: 'auto', marginBottom: 'auto', textAlign: 'center', flexGrow: '1'}}>
