@@ -24,6 +24,7 @@ const CarplayPage: NextPage = () => {
 
   const touchEvent = (type: number, x: number, y: number) => {
     console.log("touch event type: ", + type + " x: " + x + " y:" + y)
+    ws?.send(JSON.stringify({ type, x, y }));
   }
 
   const changeSetting = (key: string, value: any) => {

@@ -8,7 +8,7 @@ const mp4Reader = new Readable({
 });
 
 let wss;
-wss = new WebSocket.Server({ port: 3001 , perMessageDeflate: false});
+wss = new WebSocket.Server({ port: 3001, perMessageDeflate: false});
 
 wss.on('connection', function connection(ws) {
   console.log('Socket connected. sending data...');
@@ -26,10 +26,16 @@ wss.on('connection', function connection(ws) {
   });
 });
 
+wss.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  carplay.sendTouch(data.type, data.x, data.y);
+  console.log(data.type, data.x, data.y);
+}
+
 // TODO: use env variables for config
 const config = {
   dpi: 240,
-  nightMode: 0, // TODO: get from canbus
+  nightMode: 0, // TODO: get from canbus or browser
   hand: 0,
   boxName: 'nodePlay',
   width: 800,
@@ -51,30 +57,3 @@ carplay.on('status', (data) => {
 carplay.on('quit', () => {
   console.log("carplay quit")
 })
-
-// ipcMain.on('click', (event, data) => {
-//     carplay.sendTouch(data.type, data.x, data.y)
-//     console.log(data.type, data.x, data.y)
-// })
-
-// ipcMain.on('statusReq', (event, data) => {
-//     if(carplay.getStatus()) {
-//         mainWindow.webContents.send('plugged')
-//     } else {
-//         mainWindow.webContents.send('unplugged')
-//     }
-// })
-
-// ipcMain.on("fpsReq", (event) => {
-//     event.returnValue = settings.store.get('fps')
-// })
-
-// ipcMain.on('getSettings', () => {
-//     mainWindow.webContents.send('allSettings', settings.store.store)
-// })
-
-// ipcMain.on('settingsUpdate', (event, {type, value}) => {
-//     console.log("updating settings", type, value)
-//     settings.store.set(type, value)
-//     mainWindow.webContents.send('allSettings', settings.store.store)
-// })
