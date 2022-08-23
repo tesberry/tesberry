@@ -44,6 +44,7 @@ services:
       - 3001:3001
     environment:
       - LIBUSB_DEBUG=9
+    privileged: true
     volumes:
       - /dev/bus/usb:/dev/bus/usb
 
