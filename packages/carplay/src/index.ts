@@ -49,7 +49,7 @@ carplay.on('status', (data) => {
 })
 
 carplay.on('quit', () => {
-  // mainWindow.webContents.send('quitReq')
+  console.log("carplay quit")
 })
 
 // ipcMain.on('click', (event, data) => {

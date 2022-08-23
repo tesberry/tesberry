@@ -17,7 +17,6 @@ const customStyles = {
 
 interface CarplayProps {
   status: boolean;
-  reload: () => void;
   settings: { fps: number };
   changeSetting: (key: string, value: number | boolean) => void;
   touchEvent: (type: number, x: number, y: number) => void;
@@ -25,7 +24,7 @@ interface CarplayProps {
   ws: WebSocket | undefined;
 }
 
-export const Carplay: React.FC<CarplayProps> = ({ status, reload, settings, changeSetting, type, ws, touchEvent }) => {
+export const Carplay: React.FC<CarplayProps> = ({ status, settings, changeSetting, type, ws, touchEvent }) => {
   const ref = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [state, setState] = React.useState({
@@ -66,7 +65,7 @@ export const Carplay: React.FC<CarplayProps> = ({ status, reload, settings, chan
         }
         let buf = Buffer.from(event.data)
         let video = buf.slice(4)
-        jmuxer.feed({video: new Uint8Array(video)})
+        jmuxer.feed({ video: new Uint8Array(video) })
       }
     } else if (type === "socket.io") {
       ws.addEventListener('carplay', (data) => {
@@ -166,7 +165,7 @@ export const Carplay: React.FC<CarplayProps> = ({ status, reload, settings, chan
            }
          }}
          style={{height: '100%', width: '100%', padding: 0, margin: 0, display: 'flex'}}>
-        <video ref={videoRef} style={{height: status ? "100%" : "0%"}} autoPlay muted id="player" />
+        <video ref={videoRef} style={{ height: status ? "100%" : "0%" }} autoPlay muted id="player" />
         {status ? <div></div>
           :
           <div style={{marginTop: 'auto', marginBottom: 'auto', textAlign: 'center', flexGrow: '1'}}>
@@ -183,7 +182,7 @@ export const Carplay: React.FC<CarplayProps> = ({ status, reload, settings, chan
         contentLabel="Example Modal"
         ariaHideApp={true}
       >
-        <Settings settings={settings} changeValue={changeSetting} reqReload={reload} />
+        <Settings settings={settings} changeValue={changeSetting} />
       </Modal>
     </div>
  );

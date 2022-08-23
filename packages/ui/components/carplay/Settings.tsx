@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import WebCam from "./webCam";
+import React from 'react';
 import Modal from "react-modal";
 
 const customStyles = {
@@ -11,21 +10,10 @@ const customStyles = {
 interface SettingsProps {
   settings: { fps: number };
   changeValue: (key: string, value: number | boolean) => void;
-  reqReload: () => void;
   customStyles?: React.CSSProperties & Modal.Styles;
 }
 
-export const Settings: React.FC<SettingsProps> = ({ settings, changeValue, customStyles, reqReload }) => {
-  const [state, setState] = React.useState({ webCam: false })
-
-  const openWebCam = useCallback(() => {
-    setState({ webCam: true })
-  }, []);
-
-  const closeWebcam = useCallback(() => {
-    setState({ webCam: false })
-  }, [])
-
+export const Settings: React.FC<SettingsProps> = ({ settings, changeValue, customStyles }) => {
   const getInput = (key: string, value: any) => {
     switch (key) {
       case 'fps':
@@ -42,7 +30,6 @@ export const Settings: React.FC<SettingsProps> = ({ settings, changeValue, custo
     }
   }
 
-
   const single = (key: string, value: any) => {
     return(
       <div>
@@ -58,25 +45,11 @@ export const Settings: React.FC<SettingsProps> = ({ settings, changeValue, custo
   return (
     <div>
       <div>
-        <button onClick={openWebCam}>Show webCam </button>
         <hr />
         <div style={customStyles}>
           {Object.keys(settings).map(key => single(key, settings[key as keyof typeof settings]))}
         </div>
       </div>
-      <div style={{marginTop: 'auto', marginLeft: 'auto', marginRight: 'auto'}}>
-        <button style={{marginTop: 'auto', marginLeft: 'auto', marginRight: 'auto'}} onClick={reqReload}>click to reload</button>
-      </div>
-      <Modal
-        isOpen={state.webCam}
-        // onAfterOpen={afterOpenModal}
-        onRequestClose={closeWebcam}
-        style={customStyles}
-        contentLabel="Example Modal"
-        ariaHideApp={true}
-      >
-        <WebCam />
-      </Modal>
     </div>
   );
 };

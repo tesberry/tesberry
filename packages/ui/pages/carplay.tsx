@@ -3,7 +3,14 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { Carplay } from '../components/carplay/Carplay'
 
+const defaultSettings = { fps : 60 };
+
+if (typeof window !== 'undefined' && window.localStorage.getItem('settings') === null) {
+  window.localStorage.setItem('settings', JSON.stringify(defaultSettings))
+}
+
 const CarplayPage: NextPage = () => {
+  const [settings, setSettings] = useState(JSON.parse(window.localStorage.getItem('settings') || '') || defaultSettings);
   const [ws, setWs] = useState<WebSocket>();
 
   useEffect(() => {
@@ -20,10 +27,9 @@ const CarplayPage: NextPage = () => {
 
   const changeSetting = (key: string, value: any) => {
     console.log("setting: " + key + " change to: " + value)
-  }
-
-  const reload = () => {
-    console.log("reload request")
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+    window.localStorage.setItem('settings', JSON.stringify(newSettings));
   }
 
   const toggleCarplay = () => {
@@ -38,13 +44,10 @@ const CarplayPage: NextPage = () => {
       <div className="App" style={{height: '100%'}}>
         <button onClick={toggleCarplay}>openCarplay</button>
         <Carplay
-          settings={{
-            fps: 60,
-          }}
+          settings={settings}
           status={status}
           touchEvent={touchEvent}
           changeSetting={changeSetting}
-          reload={reload}
           ws={ws}
           type="ws"
         />
