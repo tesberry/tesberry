@@ -42,8 +42,6 @@ services:
     restart: "no"
     ports:
       - 3001:3001
-    environment:
-      - LIBUSB_DEBUG=9
     network_mode: host
     privileged: true
     cap_add:
