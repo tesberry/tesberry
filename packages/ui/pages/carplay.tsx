@@ -17,6 +17,7 @@ const CarplayPage: NextPage = () => {
     const socket = new WebSocket('ws://tesberry:3001');
     socket.binaryType = 'arraybuffer';
     setWs(socket);
+    return () => socket.close();
   }, [])
 
   const [status, setStatus] = useState(false);
