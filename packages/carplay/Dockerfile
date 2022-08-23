@@ -1,5 +1,7 @@
 FROM node
 
+RUN apt update && apt install -y ffmpeg
+
 COPY . .
 
 RUN yarn install
