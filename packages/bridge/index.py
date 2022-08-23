@@ -90,8 +90,9 @@ def onCANMessage(msg: can.Message):
             pass
             # print('Decoding message failed for ID {}'.format(msg.arbitration_id))
         else:
-            cache[msg.arbitration_id] = data
-            publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
+            if cache[msg.arbitration_id] != data:
+                cache[msg.arbitration_id] = data
+                publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
 
 async def main():
     '''The main function that runs in the loop.'''
