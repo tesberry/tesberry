@@ -41,4 +41,9 @@ echo "disable_splash=1" >> /boot/config.txt
 echo "boot_delay=0" >> /boot/config.txt
 echo -n " fastboot" >> /boot/cmdline.txt
 
+# Create udev rule thats specific to carlinkit device for Apple CarPlay
+echo "-------- Setting up Apple CarPlay --------"
+echo "SUBSYSTEM==\"usb\", ATTR{idVendor}==\"1314\", ATTR{idProduct}==\"1520\", MODE=\"0660\", GROUP=\"plugdev\"" | sudo tee /etc/udev/rules.d/52-nodecarplay.rules
+
+
 echo "-------- Done --------"
