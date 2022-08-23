@@ -42,6 +42,13 @@ services:
     environment:
      - PORT=9002
 
+  carplay:
+    build: ./packages/carplay
+    restart: "no"
+    network_mode: host
+    ports:
+      - 3001:3001
+
   nodered:
     image: nodered/node-red:latest
     restart: always
@@ -49,7 +56,7 @@ services:
     volumes:
       - ./config/nodered:/data
     ports:
-      - "1880:1880"
+      - 1880:1880
     user: "1000"
 
   portainer:
