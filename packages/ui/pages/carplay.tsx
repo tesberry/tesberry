@@ -7,7 +7,7 @@ const CarplayPage: NextPage = () => {
   const [ws, setWs] = useState<WebSocket>();
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:3001');
+    const socket = new WebSocket('ws://tesberry:3001');
     socket.binaryType = 'arraybuffer';
     setWs(socket);
   }, [])
