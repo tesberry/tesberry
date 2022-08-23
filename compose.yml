@@ -14,6 +14,8 @@ services:
     build: ./packages/ui
     restart: always
     network_mode: host
+    environment:
+      - PORT=80
 
   mosquitto:
     image: eclipse-mosquitto
