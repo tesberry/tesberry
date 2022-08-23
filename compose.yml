@@ -45,6 +45,7 @@ services:
     environment:
       - LIBUSB_DEBUG=9
     network_mode: host
+    privileged: true
     cap_add:
       - NET_ADMIN
     volumes:
