@@ -7,8 +7,7 @@ const mp4Reader = new Readable({
     }
 });
 
-let wss;
-wss = new WebSocket.Server({ port: 3001, perMessageDeflate: false});
+let wss = new WebSocket.Server({ port: 3001, perMessageDeflate: false});
 
 wss.on('connection', function connection(ws) {
   console.log('Socket connected. sending data...');
@@ -26,11 +25,11 @@ wss.on('connection', function connection(ws) {
   });
 });
 
-wss.onmessage = (event) => {
+wss.on('message', (event) => {
   const data = JSON.parse(event.data);
   carplay.sendTouch(data.type, data.x, data.y);
   console.log(data.type, data.x, data.y);
-}
+});
 
 // TODO: use env variables for config
 const config = {
