@@ -19,7 +19,7 @@ wss.on('connection', function connection(ws) {
   })
 
   ws.on('message', (data) => {
-    const parsedData = JSON.parse(data);
+    const parsedData = JSON.parse(data as unknown as string);
     carplay.sendTouch(parsedData.type, parsedData.x, parsedData.y);
     console.log(parsedData.type, parsedData.x, parsedData.y);
   });
