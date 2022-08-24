@@ -18,7 +18,7 @@ wss.on('connection', function connection(ws) {
     ws.send(data)
   })
 
-  wss.on('message', (data) => {
+  ws.on('message', (data) => {
     if (Array.isArray(data)) return;
     const parsedData = deserialize(data);
     carplay.sendTouch(parsedData.type, parsedData.x, parsedData.y);
