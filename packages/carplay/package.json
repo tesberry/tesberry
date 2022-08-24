@@ -11,6 +11,7 @@
     "dev": "ts-node src/index.ts"
   },
   "dependencies": {
+    "bson": "^4.7.0",
     "node-carplay": "^2.0.9",
     "ws": "^8.8.1"
   },

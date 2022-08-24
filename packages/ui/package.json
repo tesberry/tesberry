@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fontsource/montserrat": "^4.5.12",
+    "bson": "^4.7.0",
     "jmuxer": "^2.0.4",
     "next": "12.2.5",
     "react": "18.2.0",
