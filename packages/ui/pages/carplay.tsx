@@ -10,7 +10,7 @@ if (typeof window !== 'undefined' && window.localStorage.getItem('settings') ===
 }
 
 const CarplayPage: NextPage = () => {
-  const [settings, setSettings] = useState(JSON.parse(window.localStorage.getItem('settings') || '') || defaultSettings);
+  const [settings, setSettings] = useState(typeof window !== 'undefined' ? (JSON.parse(window.localStorage.getItem('settings') || '')) : '' || defaultSettings);
   const [ws, setWs] = useState<WebSocket>();
 
   useEffect(() => {
