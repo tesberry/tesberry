@@ -17,18 +17,18 @@ wss.on('connection', function connection(ws) {
     ws.send(data)
   })
 
+  wss.on('message', (data) => {
+    const parsedData = JSON.parse(data);
+    carplay.sendTouch(parsedData.type, parsedData.x, parsedData.y);
+    console.log(parsedData.type, parsedData.x, parsedData.y);
+  });
+
   ws.on('error', function error(error) {
     console.log('WebSocket error');
   });
   ws.on('close', function close(msg) {
     console.log('WebSocket close');
   });
-});
-
-wss.on('message', (event) => {
-  const data = JSON.parse(event.data);
-  carplay.sendTouch(data.type, data.x, data.y);
-  console.log(data.type, data.x, data.y);
 });
 
 // TODO: use env variables for config
