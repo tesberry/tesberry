@@ -1,7 +1,6 @@
 import { Readable } from 'stream';
 import WebSocket from 'ws';
 import Carplay from 'node-carplay';
-import { deserialize } from 'bson'
 
 const mp4Reader = new Readable({
     read(size) {
@@ -20,8 +19,7 @@ wss.on('connection', function connection(ws) {
   })
 
   ws.on('message', (data) => {
-    if (Array.isArray(data)) return;
-    const parsedData = deserialize(data);
+    const parsedData = JSON.parse(data);
     carplay.sendTouch(parsedData.type, parsedData.x, parsedData.y);
     console.log(parsedData.type, parsedData.x, parsedData.y);
   });
