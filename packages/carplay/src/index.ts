@@ -11,6 +11,7 @@ const mp4Reader = new Readable({
 let wss = new WebSocket.Server({ port: 3001, perMessageDeflate: false});
 
 wss.on('connection', function connection(ws) {
+  ws.binaryType = "arraybuffer";
   console.log('Socket connected. sending data...');
   const wsstream = WebSocket.createWebSocketStream(ws);
 
