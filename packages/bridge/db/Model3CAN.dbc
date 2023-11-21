@@ -2348,8 +2348,8 @@ BO_ 616 ID268SystemPower: 5 VehicleBus
 
 BO_ 79 ID04FGPSLatLong: 8 ChassisBus
  SG_ GPSAccuracy04F : 57|7@1+ (0.2,0) [0|25.2] "m"  Receiver
- SG_ GPSLongitude04F : 28|28@1- (1E-006,0) [-134.218|134.218] "Deg"  Receiver
- SG_ GPSLatitude04F : 0|28@1- (1E-006,0) [-134.218|134.218] "Deg"  Receiver
+ SG_ GPSLongitude04F : 28|28@1+ (1E-006,0) [0|360] "Deg"  Receiver
+ SG_ GPSLatitude04F : 0|28@1- (1E-006,0) [-90|90] "Deg"  Receiver
 
 BO_ 978 ID3D2TotalChargeDischarge: 8 VehicleBus
  SG_ TotalDischargeKWh3D2 : 0|32@1+ (0.001,0) [0|4294970] "kWh"  Receiver
