@@ -6,4 +6,4 @@ COPY . .
 
 RUN ./setup.sh
 
-ENTRYPOINT [ "python", "index.py" ]
+ENTRYPOINT [ "python", "-u", "index.py" ]

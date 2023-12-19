@@ -2,7 +2,6 @@
 
 import os
 import asyncio
-import atexit
 import can
 import cantools
 import jsonpickle
@@ -15,31 +14,31 @@ load_dotenv()
 mqttc = None
 notifier = None
 cache = {}
-vehicle_can = os.getenv('VEHICLE_CAN', 'can0')
+channel = os.getenv('CHANNEL', 'can0')
 
-if vehicle_can.startswith('v'):
+if channel.startswith('v'):
     # Setting up a virtual interface
     os.system('modprobe vcan')
-    os.system('ip link add {} type vcan bitrate 500000'.format(vehicle_can))
-    os.system('ip link set {} up'.format(vehicle_can))
+    os.system('ip link add {} type vcan bitrate 500000'.format(channel))
+    os.system('ip link set {} up'.format(channel))
 else:
     # Connect to physical interface
-    os.system('ip link set {} type can bitrate 500000'.format(vehicle_can))
-    os.system('ifconfig {} up'.format(vehicle_can))
+    os.system('ip link set {} type can bitrate 500000'.format(channel))
+    os.system('ifconfig {} up'.format(channel))
 
 def closeConnection():
-    if vehicle_can.startswith('v'):
+    if channel.startswith('v'):
         # Remove virtual interface
-        os.system('ip link delete {}'.format(vehicle_can))
+        os.system('ip link delete {}'.format(channel))
     else:
         # Disconnect to physical interface
-        os.system('ifconfig {} down'.format(vehicle_can))
+        os.system('ifconfig {} down'.format(channel))
     notifier.stop()
     mqttc.loop_stop()
     mqttc.disconnect()
     print('Connection closed.')
 
-bus = can.interface.Bus(bustype='socketcan', channel=vehicle_can, bitrate=500000)
+bus = can.interface.Bus(bustype='socketcan', channel=channel, bitrate=500000)
 db = cantools.database.load_file('./db/Model3CAN.dbc')
 
 def initMQTT():
@@ -65,16 +64,18 @@ def initMQTT():
 
 def onMQTTMessage(client, userdata, msg):
     if msg.topic.endswith('/SET'):
-        topic = msg.topic.split('/')
-        payload = jsonpickle.decode(msg.payload)
-        details = db.get_message_by_name(topic[2])
-        # Combine payload with cached data
-        data = cache.get(details.frame_id) | payload
-        hexData = details.encode(data)
-        can_message = can.Message(arbitration_id=details.frame_id, data=hexData, is_extended_id=False)
         try:
-            bus.send(can_message)
-            print('CAN message sent')
+            topic = msg.topic.split('/')
+            payload = jsonpickle.decode(msg.payload)
+            details = db.get_message_by_name(topic[2])
+
+            if details.frame_id in cache.keys():
+                # Combine payload with cached data
+                data = cache.get(details.frame_id) | payload
+                hexData = details.encode(data)
+                can_message = can.Message(arbitration_id=details.frame_id, data=hexData, is_extended_id=False)
+                bus.send(can_message)
+                print('CAN message sent')
         except can.CanError:
             print('CAN message not sent')
 
@@ -90,8 +91,9 @@ def onCANMessage(msg: can.Message):
             pass
             # print('Decoding message failed for ID {}'.format(msg.arbitration_id))
         else:
-            if cache[msg.arbitration_id] != data:
+            if cache.get(msg.arbitration_id) != data:
                 cache[msg.arbitration_id] = data
+                # TODO: filter counters and checksums to reduce mqtt overhead
                 publish.single('/'.join(['tesberry', details.senders[0], details.name]) , jsonpickle.encode(data, unpicklable=False, max_depth=1).replace('"\'', '"').replace('\'"', '"'))
 
 async def main():
@@ -109,6 +111,12 @@ async def main():
 
     # Create Notifier with an explicit loop to use for scheduling of callbacks
     loop = asyncio.get_running_loop()
+
+    signals = (signal.SIGTERM, signal.SIGINT)
+    for s in signals:
+        loop.add_signal_handler(
+            s, lambda s=s: asyncio.create_task(closeConnection()))
+
     global notifier
     notifier = can.Notifier(bus, listeners, loop=loop)
 
@@ -122,7 +130,4 @@ async def main():
         print('Closing Loop')
         pass
 
-if __name__ == "__main__":
-    atexit.register(closeConnection)
-    signal.signal(signal.SIGTERM, closeConnection)
-    asyncio.run(main())
+asyncio.run(main())
