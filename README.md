@@ -6,7 +6,7 @@
 
 1. Flash Raspberry Pi OS Lite (32-bit) using the Raspberry Pi Imager with the following settings:
    1. Set hostname to `tesberryPi` 
-   2. Enable SHH
+   2. Enable SSH
    3. Set a username and password
    4. Configure your network and region
 2. Start Raspberry Pi and connect via SSH
