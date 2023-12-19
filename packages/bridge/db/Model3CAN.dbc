@@ -2903,7 +2903,7 @@ BO_ 1834 ID72ABMS_serialNumber: 8 VehicleBus
  SG_ BMS_packSerialNumberByte14 m1 : 56|8@1+ (1,0) [0|255] ""  Receiver
  SG_ BMS_serialNumberMultiplexer M : 0|1@1+ (1,0) [0|1] ""  Receiver
 
-BO_ 2047 ID7FFcarConfig: 8 VehicleBus
+BO_ 2047 ID7FFGTW_carConfig: 8 VehicleBus
  SG_ GTW_carConfigMultiplexer M : 0|8@1+ (1,0) [0|255] ""  Receiver
  SG_ GTW_activeHighBeam m2 : 34|1@1+ (1,0) [0|1] ""  Receiver
  SG_ GTW_airSuspension m3 : 22|2@1+ (1,0) [0|2] ""  Receiver
@@ -4292,4 +4292,3 @@ VAL_ 2047 GTW_wheelType 4 "GEMINI_19_SQUARE" 5 "GEMINI_19_STAGGERED" 0 "PINWHEEL
 VAL_ 2047 GTW_windshieldType 1 "EASTMAN_ACOUSTIC" 0 "SEKISUI_ACOUSTIC" ;
 VAL_ 2047 GTW_xcpESP 0 "FALSE" 1 "TRUE" ;
 VAL_ 2047 GTW_xcpIbst 0 "FALSE" 1 "TRUE" ;
-
