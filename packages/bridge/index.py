@@ -114,8 +114,7 @@ async def main():
 
     signals = (signal.SIGTERM, signal.SIGINT)
     for s in signals:
-        loop.add_signal_handler(
-            s, lambda s=s: asyncio.create_task(closeConnection()))
+        loop.add_signal_handler(s, lambda s=s: asyncio.create_task(closeConnection()))
 
     global notifier
     notifier = can.Notifier(bus, listeners, loop=loop)
