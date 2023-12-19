@@ -1,18 +1,35 @@
 version: "3"
 
 services:
-  tesberry-bridge:
+  tesberry-bridge-vehicle:
+    image: tesberry-bridge
     build: ./packages/bridge
     restart: always
     network_mode: host
+    volumes:
+      - ./packages/bridge/db/Model3CAN.dbc:/db/Model3CAN.dbc
+      - ./packages/bridge/index.py:/index.py
     cap_add:
       - NET_ADMIN
     environment:
-      - VEHICLE_CAN=can0
+      - CHANNEL=can0
+
+  tesberry-bridge-chassis:
+    image: tesberry-bridge
+    build: ./packages/bridge
+    restart: always
+    network_mode: host
+    volumes:
+      - ./packages/bridge/db/Model3CAN.dbc:/db/Model3CAN.dbc
+      - ./packages/bridge/index.py:/index.py
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - CHANNEL=can1
 
   tesberry-ui:
     build: ./packages/ui
-    restart: always
+    restart: "no"
     network_mode: host
     environment:
       - PORT=80
@@ -26,7 +43,8 @@ services:
       - 1883:1883
       - 9001:9001
 
-  savvycan-mqtt:
+  savvycan-mqtt-vehicle:
+    image: savvycan-mqtt
     build: ./packages/savvycan-mqtt
     restart: "no"
     network_mode: host
@@ -34,6 +52,18 @@ services:
       - NET_ADMIN
     environment:
       - CHANNEL=can0
+      - MQTT_HOST=localhost
+      - MQTT_PORT=1883
+
+  savvycan-mqtt-chassis:
+    image: savvycan-mqtt
+    build: ./packages/savvycan-mqtt
+    restart: "no"
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - CHANNEL=can1
       - MQTT_HOST=localhost
       - MQTT_PORT=1883
 
